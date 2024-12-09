@@ -72,9 +72,11 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {
-                          salectedFilter = filter;
-                        });
+                        setState(
+                          () {
+                            salectedFilter = filter;
+                          },
+                        );
                       },
                       child: Chip(
                         label: Text(filter),
@@ -101,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 itemCount: filters.length,
               ),
-            )
+            ),
           ],
         ),
       ),
