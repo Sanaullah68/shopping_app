@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_app/cart_provider.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Map<String, Object> products;
@@ -9,7 +11,33 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-  int salectedSize = 0;
+  int selectedSize = 0;
+  void onTap() {
+    if (selectedSize != 0) {
+      Provider.of<CartProvider>(context, listen: false).addProduct(
+        {
+          'id': widget.products['id'],
+          'title': widget.products['title'],
+          'price': widget.products['price'],
+          'imageUrl': widget.products['imageUrl'],
+          'company': widget.products['company'],
+          'size': selectedSize,
+        },
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Product successfully added to cart"),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please select a Size"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,14 +88,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
-                                salectedSize = size;
+                                selectedSize = size;
                               });
                             },
                             child: Chip(
                               label: Text(
                                 size.toString(),
                               ),
-                              backgroundColor: salectedSize == size
+                              backgroundColor: selectedSize == size
                                   ? Theme.of(context).colorScheme.primary
                                   : null,
                             ),
@@ -78,7 +106,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: onTap,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: const Size(double.infinity, 50),
